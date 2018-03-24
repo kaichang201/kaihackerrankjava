@@ -21,9 +21,19 @@ public class leftrotation {
             int aItem = Integer.parseInt(aItems[aItr].trim());
             a[aItr] = aItem;
         }
-        
+        for (int i = 0; i<d; i++) {
+        	leftrotate(a);
+        }
         for (int i = 0; i <n ;i++) {
-        	System.out.print(a[i]);
+        	System.out.print(a[i] + " ");
         }
     }
+    
+    public static void leftrotate(int[] inArray) {
+    	int firstIndex = inArray[0];
+    	for (int i=0; i<inArray.length-1; i++) {
+    		inArray[i] = inArray[i+1];
+    	}
+    	inArray[inArray.length-1] = firstIndex;
+     }
 }
