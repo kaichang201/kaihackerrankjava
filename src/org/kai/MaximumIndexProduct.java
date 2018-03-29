@@ -48,11 +48,13 @@ public class MaximumIndexProduct {
 		Scanner scanner = new Scanner (System.in);
 		int n = scanner.nextInt();
 		long[] myArray = new long[n];
-		int[] myLeft = new int[n], myRight = new int[n];
+		int[] myLeft = new int[n], myRight = new int [n];
 		long maxIndexProduct = 0;
 		
 		for (int i = 0; i<n; i++) {
 			myArray[i] = scanner.nextInt();
+			if (myArray[i] == 0) 
+		System.out.println (myArray[i] +" " + i);
 		} 
 		myLeft[0] = 0;
 		myRight[n-1] = 0;
@@ -79,9 +81,10 @@ public class MaximumIndexProduct {
 					break;
 				}
 			}
-			System.out.println (myArray[i] +" " + myLeft[i] + " " + myRight[i]);
-			if (myLeft[i] * myRight[i] > maxIndexProduct)
-				maxIndexProduct = myLeft[i] *  myRight[i];
+			if (myArray[i] == 0) 
+				System.out.println (myArray[i] +" " + myLeft[i] + " " + myRight[i]  + " " + (long)myLeft[i] * myRight[i]) ;
+			if ((long)myLeft[i] * myRight[i] > maxIndexProduct)
+				maxIndexProduct = (long)myLeft[i] *  myRight[i];
 		} 
 		System.out.println(maxIndexProduct);
 	}
