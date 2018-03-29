@@ -57,9 +57,10 @@ public class TaxiDriversProblem {
 		while ( possiblePaths >0 ) {  // loop until all paths found
 			for (int i = 1; i<n+1; i++) {
 				for (int j = 1; j<n+1; j++) {
-					if (myPath[i][j] != null)  {  // if I found a path from i to j, find all paths j to k and calculate i to k
 						for (int k = 1; k <n+1; k++) {
-							if ( k != i && myPath[j][k] != null && myPath[i][k] == null ) {  // found connection
+							if ( i != j && j != k && i != k
+									&& myPath[i][j] != null && myPath[j][k] != null
+									&& myPath[i][k] == null ) {  // found connection
 								// Found new path
 								myPath[i][k] = mytd.new Path();
 								myPath[i][k].h = myPath[i][j].h + myPath[j][k].h;
@@ -68,7 +69,8 @@ public class TaxiDriversProblem {
 								myPath[k][i] = myPath[i][k]; // initialize both sides of the diagonal to make discovery easier.
 								possiblePaths--; // count 
 								System.out.println("Path found " + possiblePaths + " "  + i + " to " + k + " h " + myPath[i][k].h + " v " + myPath[i][k].v + " hops " + myPath[i][k].hops);
-							} else if (k != i && myPath[j][k] != null
+							} else 	if ( i != j && j != k && i != k
+									&& myPath[i][j] != null && myPath[j][k] != null
 									&& myPath[i][k] != null
 									&& myPath[i][k].hops > myPath[i][j].hops + myPath[j][k].hops ) { // found shorter connection
 								myPath[i][k].h = myPath[i][j].h + myPath[j][k].h;
@@ -78,7 +80,6 @@ public class TaxiDriversProblem {
 								System.out.println("Shorter Path found " + possiblePaths + " "  + i + " to " + k + " h " + myPath[i][k].h + " v " + myPath[i][k].v + " hops " + myPath[i][k].hops);
 							}
 						}
-					}
 				}
 			}
 		}
