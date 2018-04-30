@@ -29,7 +29,7 @@ public class TaxiDriversProblem {
 	static Junction[] myJunc;
 	static Path[][] myPath;
 	static HashMap<Integer, ArrayList<Path>> myPathHash;
-	static int[][] myTravelledPath;
+	static HashMap<Integer, HashMap<Integer,Integer>> myTravelledPath;
 	static long totalPathsCanTravel = 0;
 		
 	public static void algo3() {
@@ -38,8 +38,8 @@ public class TaxiDriversProblem {
 		int n = scanner.nextInt();
 		long carh = scanner.nextLong(), carv = scanner.nextLong();
 		myJunc = new Junction[n+1];
-		myTravelledPath = new int[n+1][n+1];
 		myPathHash = new HashMap<Integer, ArrayList<Path>>();
+		myTravelledPath = new HashMap<Integer, HashMap<Integer,Integer>>();
 		long possiblePaths = (n*n - n) / 2; // possible paths is n^2, less the path from node to itself.
 
 		
@@ -48,6 +48,7 @@ public class TaxiDriversProblem {
 			myJunc[i].x = scanner.nextInt();
 			myJunc[i].y = scanner.nextInt();
 			myPathHash.put(i, new ArrayList<Path>());
+			myTravelledPath.put(i, new HashMap<Integer,Integer>());
 			System.out.println("3juncture " + myJunc[i].x + "," + myJunc[i].y);
 		} 
 		
@@ -82,12 +83,16 @@ public class TaxiDriversProblem {
 				int toJunc;
 				if (viaJunc == myiPath.junc1) toJunc = myiPath.junc2;
 				else toJunc = myiPath.junc1;
-				if (myTravelledPath[fromJunc][toJunc] != 1 && fromJunc != toJunc) {  // mark this path has been counted
-					System.out.println("3from "+ fromJunc + " to "  + toJunc + " can travel" );
-					totalPathsCanTravel++;
-					myTravelledPath[fromJunc][toJunc] = 1; 
+				if (fromJunc == toJunc) {
+					System.out.println("Detected loop from " + fromJunc);// loop detection
+					continue;
 				}
-				walkPaths (myPathHash.get(toJunc), fromJunc, toJunc, h - myiPath.h, v-myiPath.v);
+				if (myTravelledPath.get(fromJunc).get(toJunc) == null && fromJunc != toJunc) {  // mark this path has been counted
+					System.out.println("3 from "+ fromJunc + " to "  + toJunc + " can travel via " + viaJunc );
+					totalPathsCanTravel++;
+					myTravelledPath.get(fromJunc).put(toJunc, 1);
+					walkPaths (myPathHash.get(toJunc), fromJunc, toJunc, h - myiPath.h, v-myiPath.v);
+				}
 			}
 		}
 	}
