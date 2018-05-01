@@ -69,11 +69,11 @@ public class TaxiDriversProblem {
 		// All junctures are connected to each other.  All junctures have exactly 1 shortest path to each other
 		for (int i = 1; i < n+1; i++) {  // walk n iterations
 			walkPaths(myPathHash.get(i), i, i, carh, carv);
-			System.out.println("3Found "+totalPathsCanTravel + " paths after "+ i );
+			System.out.println("3Found "+myTravelledPath.size() + " paths after "+ i );
 		}
 
-		System.out.println ("3 Possible Paths " + possiblePaths  + " total paths can travel " + totalPathsCanTravel);
-		System.out.println (possiblePaths - (totalPathsCanTravel/2));
+		//System.out.println ("3 Possible Paths " + possiblePaths  + " total paths can travel " + totalPathsCanTravel);
+		System.out.println (possiblePaths - (myTravelledPath.size()/2));
 		// Solution 226330206 for problem 5
 	}
 	
@@ -87,9 +87,9 @@ public class TaxiDriversProblem {
 					System.out.println("Detected loop from " + fromJunc);// loop detection
 					continue;
 				}
-				if (myTravelledPath.get(fromJunc).get(toJunc) == null && fromJunc != toJunc) {  // mark this path has been counted
-					System.out.println("3 from "+ fromJunc + " to "  + toJunc + " can travel via " + viaJunc );
-					totalPathsCanTravel++;
+				if (myTravelledPath.get(fromJunc).get(toJunc) == null ) {  // mark this path has been counted
+					//System.out.println("3 from "+ fromJunc + " to "  + toJunc + " can travel via " + viaJunc );
+					// totalPathsCanTravel++;
 					myTravelledPath.get(fromJunc).put(toJunc, 1);
 					walkPaths (myPathHash.get(toJunc), fromJunc, toJunc, h - myiPath.h, v-myiPath.v);
 				}
