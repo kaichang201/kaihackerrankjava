@@ -7,78 +7,66 @@ import java.util.Scanner;
 
 public class PlaguesInc {
 
+	int[][] degreesOfSeparation;
+	int unsetValue = 10000;
 
-HashMap<Integer, HashMap<Integer,Integer>> myPaths;
-HashMap<Integer, HashMap<Integer,Integer>> newPaths;
+	int plagueInc(int[][] people) {
+	    degreesOfSeparation  = new int[people.length][people.length];
+	    int leastMaxDegrees = unsetValue ;
+	    int personLeastDegrees = 0;
+	    int maxDegreeOfSeparationToCheck = 80;
 
-int plagueInc(int[][] people) {
-    int leastMaxDegrees = 10000;
-    int personLeastDegrees = 0;
-    int possiblePaths = people.length * people.length; // possible path is node squared
-    int pathsFound = 0;
-    int maxIterations = 6;
-    myPaths = new HashMap<Integer, HashMap<Integer,Integer>>();
+	    
+	    for (int i = 0; i<people.length; i++) {
+	        for (int j = 0; j<people.length;j++) {
+	            degreesOfSeparation[i][j] = unsetValue;
+	        }
+	    }
 
-    
-    for (int i = 0; i < people.length; i++) {
-        if (people[i].length == 1) return -1;  // if this guy don't know noone, he can't be infected. game over man.
-        myPaths.put(people[i][0], new HashMap<Integer,Integer>()); // initialize this person's HashMap
-        myPaths.get(people[i][0]).put(people[i][0], 0);
-        pathsFound++;
+	    for (int i = 0; i < people.length; i++) {
+	        
+	        if (people[i].length == 1) return -1;  // if this guy don't know noone, he can't be infected. game over man.
+	        
+	        degreesOfSeparation[people[i][0]][people[i][0]] = 0;  // set distance to self as 0
 
-        for (int j = 1; j<people[i].length ; j++) { // set distance to friend as 1
-            if (myPaths.get(people[i][0]).get(people[i][j]) == null) {
-                myPaths.get(people[i][0]).put(people[i][j],1);
-                pathsFound++;
-            }
-        }
-    }
-    
-    //System.out.println ("pathsfound " + pathsFound + " possible paths " + possiblePaths);
-    int looper=0;
-    while (pathsFound < possiblePaths && looper < maxIterations) { // if we found n^2 paths, then no point to keep looking.
-       for (int i = 0; i < people.length; i++) {
-          newPaths = new HashMap<Integer, HashMap<Integer,Integer>>();
-          for (Integer j : myPaths.get(i).keySet()) {
-              for (Integer k : myPaths.get(j).keySet()) {
-                  if (i != k && myPaths.get(i).get(k) == null) {
-                     if (newPaths.get(i) == null) newPaths.put(i, new HashMap<Integer,Integer>());
-                     newPaths.get(i).put(k, myPaths.get(i).get(j) + myPaths.get(j).get(k));
-                  }
-              }
-          }
-            for (Integer l : newPaths.keySet()) {
-                for (Integer m : newPaths.get(l).keySet()) {
-                    myPaths.get(l).put(m, newPaths.get(l).get(m));
-                    pathsFound++;
-                }
-            }
-          //System.out.println ("Paths found " + pathsFound);
-        }
-        looper++;
-    }
-    
-   for (int i = 0; i<people.length; i++) {
-       int myMaxDegrees = 0;
-        for (int j = 0; j<people.length;j++) {
-            if (myPaths.get(i).get(j) == null) {
-                //System.out.println ("from " + i + " to " + j + " unreachable ");
-                return -1; // a path was unreachable.
-            }
-            if (myPaths.get(i).get(j) > myMaxDegrees) {
-                myMaxDegrees = myPaths.get(i).get(j) ;
-                //System.out.println ("from " + i + " to " + j + " degreeness " + myMaxDegrees);
-            }
-        }
+	        for (int j = 1; j<people[i].length ; j++) { // set distance to friend as 1
+	            degreesOfSeparation[people[i][0]][people[i][j]] = 1; 
+	            degreesOfSeparation[people[i][j]][people[i][0]] = 1;
+	        }
 
-       if (leastMaxDegrees > myMaxDegrees ) {
-           leastMaxDegrees = myMaxDegrees;
-           personLeastDegrees = i;
-       }
-    }
-    return personLeastDegrees;
-}
+	    }
+	    
+	    for (int i = 0; i < people.length; i++) { // look for i -> j -> k such that i -> k can be derived from i->j j->k
+	        for (int j = 0; j < people.length; j++) {
+	            if (i == j || degreesOfSeparation[i][j] == unsetValue ) continue; // i to j undefined. skip for now
+	            for (int k = 0; k < people.length; k++) {
+	                if (i == k || degreesOfSeparation[j][k] == unsetValue ) continue; // j to k undefined. skip for now
+	                if ( degreesOfSeparation[i][k] > degreesOfSeparation[i][j] + degreesOfSeparation[j][k])  {// found shorter path
+	                    degreesOfSeparation[i][k] = degreesOfSeparation[i][j] + degreesOfSeparation[j][k];
+	                    degreesOfSeparation[k][i] = degreesOfSeparation[i][k];
+	                }
+	            }
+	        }  
+	    }
+	    
+	   for (int i = 0; i<people.length; i++) {
+	       int myMaxDegrees = 0;
+	        for (int j = 0; j<people.length;j++) {
+	            if (degreesOfSeparation[i][j] > myMaxDegrees) {
+	                myMaxDegrees = degreesOfSeparation[i][j];
+	                //System.out.println ("from " + i + " to " + j + " degreeness " + myMaxDegrees);
+	            }
+	        }
 
+
+	       if (myMaxDegrees == unsetValue) return -1;
+	       if (leastMaxDegrees > myMaxDegrees ) {
+	           leastMaxDegrees = myMaxDegrees;
+	           personLeastDegrees = i;
+	       }
+	    }
+	    return personLeastDegrees;
+	}
 
 	
 }
