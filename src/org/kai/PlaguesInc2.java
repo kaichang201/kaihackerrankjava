@@ -8,16 +8,19 @@ import java.util.Scanner;
 public class PlaguesInc2 {
 
 
+
 HashMap<Integer, HashMap<Integer,Integer>> myPaths;
-HashMap<Integer, HashMap<Integer,Integer>> newPaths;
 
 int plagueInc(int[][] people) {
     int leastMaxDegrees = 10000;
     int personLeastDegrees = 0;
     int possiblePaths = people.length * people.length; // possible path is node squared
     int pathsFound = 0;
-    int maxIterations = 6;
+    int maxIterations = 1;
     myPaths = new HashMap<Integer, HashMap<Integer,Integer>>();
+    ArrayList<Integer> newI = new ArrayList<Integer>();
+    ArrayList<Integer> newK = new ArrayList<Integer>();
+    ArrayList<Integer> newDegree = new ArrayList<Integer>();
 
     
     for (int i = 0; i < people.length; i++) {
@@ -35,28 +38,34 @@ int plagueInc(int[][] people) {
     }
     
     //System.out.println ("pathsfound " + pathsFound + " possible paths " + possiblePaths);
-    int looper=0;
-    while (pathsFound < possiblePaths && looper < maxIterations) { // if we found n^2 paths, then no point to keep looking.
        for (int i = 0; i < people.length; i++) {
-          newPaths = new HashMap<Integer, HashMap<Integer,Integer>>();
+          if (myPaths.get(i).size() == people.length) continue; // already have all connections. skip
+          newI.clear();
+          newK.clear(); 
+          newDegree.clear();
+
           for (Integer j : myPaths.get(i).keySet()) {
+              if (i == j ) continue;
               for (Integer k : myPaths.get(j).keySet()) {
                   if (i != k && myPaths.get(i).get(k) == null) {
-                     if (newPaths.get(i) == null) newPaths.put(i, new HashMap<Integer,Integer>());
-                     newPaths.get(i).put(k, myPaths.get(i).get(j) + myPaths.get(j).get(k));
+                      newI.add(i);
+                      newK.add(k);
+                      newDegree.add(myPaths.get(i).get(j) + myPaths.get(j).get(k));
+                      pathsFound+=2;
+                  } else if (i != k && myPaths.get(i).get(k) > myPaths.get(i).get(j) + myPaths.get(j).get(k)) {
+                      newI.add(i);
+                      newK.add(k);
+                      newDegree.add(myPaths.get(i).get(j) + myPaths.get(j).get(k));
                   }
               }
-          }
-            for (Integer l : newPaths.keySet()) {
-                for (Integer m : newPaths.get(l).keySet()) {
-                    myPaths.get(l).put(m, newPaths.get(l).get(m));
-                    pathsFound++;
-                }
-            }
-          //System.out.println ("Paths found " + pathsFound);
-        }
-        looper++;
-    }
+           }
+           for (int l=0; l < newI.size(); l++) {
+                   myPaths.get(newI.get(l)).put(newK.get(l), newDegree.get(l));
+                   myPaths.get(newK.get(l)).put(newI.get(l), newDegree.get(l));
+           } 
+
+       }
+
     
    for (int i = 0; i<people.length; i++) {
        int myMaxDegrees = 0;
@@ -78,6 +87,7 @@ int plagueInc(int[][] people) {
     }
     return personLeastDegrees;
 }
+
 
 	
 }
