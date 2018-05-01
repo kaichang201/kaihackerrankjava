@@ -9,6 +9,7 @@ public class PlaguesInc2 {
 
 
 
+
 HashMap<Integer, HashMap<Integer,Integer>> myPaths;
 
 int plagueInc(int[][] people) {
@@ -40,9 +41,9 @@ int plagueInc(int[][] people) {
     //System.out.println ("pathsfound " + pathsFound + " possible paths " + possiblePaths);
        for (int i = 0; i < people.length; i++) {
           if (myPaths.get(i).size() == people.length) continue; // already have all connections. skip
-          newI.clear();
-          newK.clear(); 
-          newDegree.clear();
+          newI =  new ArrayList<Integer>();
+          newK =  new ArrayList<Integer>(); 
+          newDegree =  new ArrayList<Integer>();
 
           for (Integer j : myPaths.get(i).keySet()) {
               if (i == j ) continue;
