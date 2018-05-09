@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class TaxiDriversProblem {
 
@@ -75,13 +76,14 @@ public class TaxiDriversProblem {
 	static int visitedCounter = 0;
 
 	
-	public static void algo10() {  // faster under 2 minutes
+	public static void algo10() {  // faster under 2 minutes under 105 seconds
 		TaxiDriversProblem mytd = new TaxiDriversProblem();
 		Scanner scanner = new Scanner (System.in);
 		int n = scanner.nextInt();
 		long carh = scanner.nextLong(), carv = scanner.nextLong();
 		myJunc = new Junction[n+1];
 		myJuncArrayMap = new ArrayList<HashMap<Integer,Edge>>(n+1);
+		myJuncArraySet = new ArrayList<HashSet<Integer>>(n+1);	
 		//visited = new HashSet<Integer>();
 		//long walkedPath = 0;
 		visitedCounter = 0;
@@ -102,15 +104,15 @@ public class TaxiDriversProblem {
 			Edge myNewEdge = mytd.new Edge(Math.abs(myJunc[u].x - myJunc[v].x), Math.abs(myJunc[u].y - myJunc[v].y));
 			myJuncArrayMap.get(u).put(v, myNewEdge);
 			myJuncArrayMap.get(v).put(u, myNewEdge);
+
 			//System.out.println("10 Path loaded " + " "  + u + " to " + v + " h ");
 		}
 		scanner.close();
 
 		// All junctures are connected to each other.  All junctures have exactly 1 shortest path to each other
 		for (int i = 1; i < n+1; i++) {  // walk n iterations
-			visitedArray = new boolean[n+1];
-			walkPath10(i, carh, carv);
-			//System.out.println ("10 Walked From " + i  + " found paths " + visited.size() + " total paths " + walkedPath );
+			walkPath10(i, carh, carv, new boolean[n+1]);
+			//System.out.println ("10 Walked From " + i  + " found paths " + visitedCounter );
 		}
 
 		System.out.println("10 possiblePaths " + possiblePaths + " walkedPaths " + (visitedCounter-n)/2 + " time taken " + (System.currentTimeMillis() - startTime));
@@ -118,18 +120,20 @@ public class TaxiDriversProblem {
 		// Solution 226330206 for problem 5
 	}
 	
-	public static void walkPath10 (int lastJ, long h, long v) {
+	public static void walkPath10 (int lastJ, long h, long v, boolean[] boolArray) {
+		boolArray[lastJ] = true;
 		visitedCounter++;
-		if (!visitedArray[lastJ]) visitedArray[lastJ] = true;
-		for(Integer nextJ: myJuncArrayMap.get(lastJ).keySet()) {
-			int myX, myY;
-			if ( !visitedArray[nextJ] 
-					&& (myX = myJuncArrayMap.get(lastJ).get(nextJ).h) <= h 
-					&& (myY = myJuncArrayMap.get(lastJ).get(nextJ).v) <= v ) {  // can go from last to next, and next not already visited
+		HashMap<Integer,Edge> myLastSet;
+		Edge myNextEdge;
+		long myH, myV;
+		for(Integer nextJ: (myLastSet = myJuncArrayMap.get(lastJ)).keySet()) {
+			if ( !boolArray[nextJ] 
+					&& (myH = (h - (myNextEdge = myLastSet.get(nextJ)).h)) >= 0 
+					&& (myV = (v - myNextEdge.v)) >= 0 ) {  // can go from last to next, and next not already visited
 				//System.out.println("  10 Found Path from " + lastJ + " to " + nextJ 
 				//		+ " remaining h " + h +  " v " + v
 				//		+ " next  h " + Math.abs(myJunc[lastJ].x - myJunc[nextJ].x) +  " v " + Math.abs(myJunc[lastJ].y - myJunc[nextJ].y));
-				walkPath10(nextJ, (h-myX), (v-myY));
+				walkPath10(nextJ, myH, myV, boolArray );
 			}
 		}
 	}
