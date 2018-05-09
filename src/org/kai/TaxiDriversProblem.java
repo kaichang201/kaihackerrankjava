@@ -71,19 +71,20 @@ public class TaxiDriversProblem {
 	static ArrayList<HashMap<Integer,Edge>> myJuncArrayMap;
 	static ArrayList<HashSet<Integer>> myJuncArraySet;	
 	static HashSet<Integer> visited;
-	static int[] visitedArray;
+	static boolean[] visitedArray;
 	static int visitedCounter = 0;
 
 	
-	public static void algo10() {  // fastest at 145seconds
+	public static void algo10() {  // faster under 2 minutes
 		TaxiDriversProblem mytd = new TaxiDriversProblem();
 		Scanner scanner = new Scanner (System.in);
 		int n = scanner.nextInt();
 		long carh = scanner.nextLong(), carv = scanner.nextLong();
 		myJunc = new Junction[n+1];
 		myJuncArrayMap = new ArrayList<HashMap<Integer,Edge>>(n+1);
-		visited = new HashSet<Integer>();
-		long walkedPath = 0;
+		//visited = new HashSet<Integer>();
+		//long walkedPath = 0;
+		visitedCounter = 0;
 		long possiblePaths = (n*n - n) / 2; // possible paths is n^2, less the path from node to itself, divided by 2 because of unordered pairs
 		long startTime = System.currentTimeMillis();
 
@@ -107,25 +108,25 @@ public class TaxiDriversProblem {
 
 		// All junctures are connected to each other.  All junctures have exactly 1 shortest path to each other
 		for (int i = 1; i < n+1; i++) {  // walk n iterations
-			visited.clear();
+			visitedArray = new boolean[n+1];
 			walkPath10(i, carh, carv);
-			walkedPath += visited.size()-1; // found all walked paths, except walking to self.  
 			//System.out.println ("10 Walked From " + i  + " found paths " + visited.size() + " total paths " + walkedPath );
 		}
 
-		System.out.println("10 possiblePaths " + possiblePaths + " walkedPaths " + walkedPath/2 + " time taken " + (System.currentTimeMillis() - startTime));
-		System.out.println (possiblePaths - (walkedPath/2)); // walked path divided by 2 because of unordered pairs
+		System.out.println("10 possiblePaths " + possiblePaths + " walkedPaths " + (visitedCounter-n)/2 + " time taken " + (System.currentTimeMillis() - startTime));
+		System.out.println (possiblePaths - (visitedCounter-n)/2); // walked path divided by 2 because of unordered pairs
 		// Solution 226330206 for problem 5
 	}
 	
 	public static void walkPath10 (int lastJ, long h, long v) {
-
-		visited.add(lastJ);
+		visitedCounter++;
+		if (!visitedArray[lastJ]) visitedArray[lastJ] = true;
 		for(Integer nextJ: myJuncArrayMap.get(lastJ).keySet()) {
-			int myX = myJuncArrayMap.get(lastJ).get(nextJ).h;
-			int myY = myJuncArrayMap.get(lastJ).get(nextJ).v;
-			if ( myX <= h && myY <=v && !visited.contains(nextJ)) {  // can go from last to next, and next not already visited
-				//System.out.println("  4 Found Path from " + lastJ + " to " + nextJ 
+			int myX, myY;
+			if ( !visitedArray[nextJ] 
+					&& (myX = myJuncArrayMap.get(lastJ).get(nextJ).h) <= h 
+					&& (myY = myJuncArrayMap.get(lastJ).get(nextJ).v) <= v ) {  // can go from last to next, and next not already visited
+				//System.out.println("  10 Found Path from " + lastJ + " to " + nextJ 
 				//		+ " remaining h " + h +  " v " + v
 				//		+ " next  h " + Math.abs(myJunc[lastJ].x - myJunc[nextJ].x) +  " v " + Math.abs(myJunc[lastJ].y - myJunc[nextJ].y));
 				walkPath10(nextJ, (h-myX), (v-myY));
@@ -139,64 +140,68 @@ public class TaxiDriversProblem {
 		int n = scanner.nextInt();
 		long carh = scanner.nextLong(), carv = scanner.nextLong();
 		myJunc = new Junction[n+1];
-		ArrayList<HashMap<Integer,LongEdge>> myArrayMapLongEdge = new ArrayList<HashMap<Integer,LongEdge>>(n+1);
-		long walkedPath = 0;
+		ArrayList<HashMap<Integer,Edge>> myArrayMapEdge = new ArrayList<HashMap<Integer,Edge>>(n+1);
+		//ArrayList<HashSet<Integer>> myJuncArraySet = new ArrayList<HashSet<Integer>>(n+1);
+		visitedCounter = 0;
 		long possiblePaths = (n*n - n) / 2; // possible paths is n^2, less the path from node to itself, divided by 2 because of unordered pairs
 		long startTime = System.currentTimeMillis();
+		Deque<Integer> que = new ArrayDeque<Integer>(n+1);
+		boolean[] visitedArray;
+		long[] visitedH, visitedV;
 
-		myArrayMapLongEdge.add(new HashMap<Integer,LongEdge>());
+		myArrayMapEdge.add(new HashMap<Integer,Edge>());
+		//myJuncArraySet.add(new HashSet<Integer>());
 		for (int i = 1; i<n+1; i++) {
 			myJunc[i] = mytd.new Junction();
 			myJunc[i].x = scanner.nextInt();
 			myJunc[i].y = scanner.nextInt();
-			myArrayMapLongEdge.add(new HashMap<Integer,LongEdge>());
-			myArrayMapLongEdge.get(i).put(i, mytd.new LongEdge(0,0));
+			//myJuncArraySet.add(new HashSet<Integer>());
+			myArrayMapEdge.add(new HashMap<Integer,Edge>());
 			//System.out.println("9 juncture " + myJunc[i].x + "," + myJunc[i].y);
 		} 
 		
 		for (int i = 0; i<n-1; i++) {  // represent Path as matrix of nondirectional edges between Junctions 1 and 2
 			int u = scanner.nextInt(), v = scanner.nextInt();
-			LongEdge myNewEdge = mytd.new LongEdge(Math.abs(myJunc[u].x - myJunc[v].x), Math.abs(myJunc[u].y - myJunc[v].y) );
-			myArrayMapLongEdge.get(u).put(v, myNewEdge);
-			myArrayMapLongEdge.get(v).put(u, myNewEdge);
+			//myJuncArraySet.get(u).add(v);
+			//myJuncArraySet.get(v).add(u);
+			Edge myNewEdge = mytd.new Edge( Math.abs(myJunc[u].x - myJunc[v].x),  Math.abs(myJunc[u].y - myJunc[v].y));
+			myArrayMapEdge.get(u).put(v, myNewEdge);
+			myArrayMapEdge.get(v).put(u, myNewEdge);
 			//System.out.println("9 Path loaded " + " "  + u + " to " + v + " h ");
 		}
 		scanner.close();
 
 		// All junctures are connected to each other.  All junctures have exactly 1 shortest path to each other
 		for (int i = 1; i < n+1; i++) {  // walk n iterations
-			int[] visitedArray = new int[n+1];
-			long[] visitedH = new long[n+1];
-			long[] visitedV = new long[n+1];
-			visitedCounter = 0;
-			Deque<Integer> que = new ArrayDeque<Integer>();
+			visitedArray = new boolean[n+1];
+			visitedH = new long[n+1];
+			visitedV = new long[n+1];
+//			visitedCounter = 0;
 			que.add(i);
 			while (que.size() > 0) {
-				int startingLengthOfQueue = que.size();
-				for (int j = 0; j< startingLengthOfQueue; j++) {  // iterate through queue for current size of queue
-					Integer lastJ = que.remove();
-					visitedCounter++;
-					visitedArray[lastJ] = 1;
-					for (Integer nextJ: myArrayMapLongEdge.get(lastJ).keySet()) {
-						if (visitedArray[nextJ] == 0) { // hasn't visited from i to nextJ
-							visitedH[nextJ] = visitedH[lastJ] + myArrayMapLongEdge.get(lastJ).get(nextJ).h;
-							visitedV[nextJ] = visitedV[lastJ] + myArrayMapLongEdge.get(lastJ).get(nextJ).v;
-							if ( visitedH[nextJ] <= carh // next Step doesn't exceed car's max distance
-									&& visitedV[nextJ] <= carv ) {
-								que.add(nextJ);  // add to queue the set of edges for next iteration
-							}
-						}
+				Integer lastJ = que.remove();
+				visitedCounter++;
+				visitedArray[lastJ] = true;
+				//for (Integer nextJ: myJuncArraySet.get(lastJ)) {
+				for (Integer nextJ: myArrayMapEdge.get(lastJ).keySet()) {
+					if (!visitedArray[nextJ] // hasn't visited from i to nextJ
+//						&& (visitedH[nextJ] = visitedH[lastJ] + Math.abs(myJunc[lastJ].x - myJunc[nextJ].x)) <= carh // next Step doesn't exceed car's max distance
+//						&& (visitedV[nextJ] = visitedV[lastJ] + Math.abs(myJunc[lastJ].y - myJunc[nextJ].y)) <= carv ) {
+						&& (visitedH[nextJ] = visitedH[lastJ] + myArrayMapEdge.get(lastJ).get(nextJ).h) <= carh // next Step doesn't exceed car's max distance
+						&& (visitedV[nextJ] = visitedV[lastJ] + myArrayMapEdge.get(lastJ).get(nextJ).v) <= carv ) {
+
+						//System.out.println ("9 at " + i +  " from " + lastJ + " to " + nextJ);
+						que.add(nextJ);  // add to queue the set of edges for next iteration
 					}
-					
-				}
+				}	
 			}
 
-			walkedPath += visitedCounter - 1; // found all walked paths, except walking to self.  
-			//System.out.println ("9 Walked From " + i  + " found paths " + (visitedCounter-1) + " total paths " + walkedPath );
+//			walkedPath += visitedCounter - 1; // found all walked paths, except walking to self.  
+			//System.out.println ("9 Walked From " + i  + " found paths " + (visitedCounter));
 		}
 
-		System.out.println("9 possiblePaths " + possiblePaths + " walkedPaths " + walkedPath/2 + " time taken " + (System.currentTimeMillis() - startTime));
-		System.out.println (possiblePaths - (walkedPath/2)); // walked path divided by 2 because of unordered pairs
+		System.out.println("9 possiblePaths " + possiblePaths + " visitedCounter " + (visitedCounter-n)/2 + " time taken " + (System.currentTimeMillis() - startTime));
+		System.out.println (possiblePaths - (visitedCounter-n)/2); // walked path divided by 2 because of unordered pairs
 		// Solution 226330206 for problem 5
 	}
 	
@@ -238,19 +243,15 @@ public class TaxiDriversProblem {
 			Deque<TravelEdge> que = new ArrayDeque<TravelEdge>();
 			que.add(mytd.new TravelEdge(i, carh, carv));
 			while (que.size() > 0) {
-				int startingLengthOfQueue = que.size();
-				for (int j = 0; j< startingLengthOfQueue; j++) {  // iterate through queue for current size of queue
-					TravelEdge lastEdge = que.remove();
-					visitedCounter++;
-					visitedArray[lastEdge.junc] = 1;
-					for (Integer nextJ: myJuncArrayMap.get(lastEdge.junc).keySet()) {
-						long myRemainingH = lastEdge.h - myJuncArrayMap.get(lastEdge.junc).get(nextJ).h;
-						long myRemainingV = lastEdge.v - myJuncArrayMap.get(lastEdge.junc).get(nextJ).v;
-						if ( myRemainingH >= 0 && myRemainingV >= 0 && visitedArray[nextJ] == 0  ) {
-							que.add(mytd.new TravelEdge(nextJ, myRemainingH, myRemainingV ));  // add to queue the set of edges for next iteration
-						}
-					}
-					
+				TravelEdge lastEdge = que.remove();
+				visitedCounter++;
+				visitedArray[lastEdge.junc] = 1;
+				for (Integer nextJ: myJuncArrayMap.get(lastEdge.junc).keySet()) {
+					long myRemainingH = lastEdge.h - myJuncArrayMap.get(lastEdge.junc).get(nextJ).h;
+					long myRemainingV = lastEdge.v - myJuncArrayMap.get(lastEdge.junc).get(nextJ).v;
+					if ( myRemainingH >= 0 && myRemainingV >= 0 && visitedArray[nextJ] == 0  ) {
+						que.add(mytd.new TravelEdge(nextJ, myRemainingH, myRemainingV ));  // add to queue the set of edges for next iteration
+					}					
 				}
 			}
 
