@@ -138,10 +138,12 @@ public class CodeFightteeNine {
 			if (Character.isDigit(q[i])) {
 				if (i == q.length-1 || q[i] != q[i+1]) {  // doesn't match next number
 					List<Character> c = m.get(Character.digit(q[i],10));
-					if (x > c.size())
+					if (x > c.size()) {
 						x = x % c.size();
-						r = r + c.get(x-1);
-						x=1;
+						if (x==0) x = c.size();
+					}
+					r = r + c.get(x-1);
+					x=1;
 				} else
 					x++;
 			} else if (Character.isLetter(q[i])) {
