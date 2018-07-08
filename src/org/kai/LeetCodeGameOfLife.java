@@ -13,11 +13,11 @@ import java.util.Scanner;
 public class LeetCodeGameOfLife {
 
 static LeetCodeGameOfLife me = new LeetCodeGameOfLife();
-int[][] inPlaceMapping = {{0,1},{0,1}}; // 00,01,10,11
 
 public static void main(String[] args) {
 	// https://leetcode.com/problems/game-of-life/description/
 	int[][] testcase1 =   {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
+	int[][] testcase2 =   {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
 	//10,01,00,11
 
 	long startTime = System.currentTimeMillis();
@@ -25,6 +25,11 @@ public static void main(String[] args) {
 	//   [0,0,0],  [1,0,1],  [0,1,1],  [0,1,0]
 	gameOfLife(testcase1);
 	for (int[] thisRow: testcase1)
+		System.out.println(Arrays.toString(thisRow));
+	
+	System.out.println();
+	gameOfLife2(testcase2);
+	for (int[] thisRow: testcase2)
 		System.out.println(Arrays.toString(thisRow));
 	
 	System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
@@ -82,5 +87,68 @@ static public int sumNeighbors (int[][] board, int i, int j) {
 	
 	return rV;
 }
+
+static int[] myBeforeBoard = new int[50];
+static int[] myAfterBoard = new int[50];
+
+static public void gameOfLife2(int[][] board) {  // in-place implementation
+	myBeforeBoard[1]=1;
+	myBeforeBoard[10]=1;
+	myBeforeBoard[11]=1;
+	myAfterBoard[1]=1;  // set a few 1's, leave remaining 0's
+	myAfterBoard[11]=1;
+	myAfterBoard[21]=1;
+	for (int i = 0; i< board.length; i++ ) {  // setup New board
+		for (int j = 0; j < board[i].length; j++) {
+			int mySum = sumNeighbors2(board, i, j);
+			if (board[i][j] == 1) { // currently alive
+				if (mySum == 2 || mySum == 3)
+					board[i][j] = 11;
+				else
+					board[i][j] = 10;
+			} else {
+				if (mySum == 3) 
+					board[i][j] = 21;
+				else
+					board[i][j] = 20;
+			}
+		}
+	}
+	
+	
+	for (int i = 0; i< board.length; i++ ) {  // update old board
+		for (int j = 0; j < board[i].length; j++) {
+			board[i][j] = myAfterBoard[board[i][j]];
+		}
+	}
+}
+
+static public int sumNeighbors2 (int[][] board, int i, int j) { // in-place implementation
+	int rV = 0;
+
+	
+	if (j > 0 ) // can sum left of me
+		rV += myBeforeBoard[board[i][j-1]];
+	if (j < board[i].length-1) // can sum right of me
+		rV += myBeforeBoard[board[i][j+1]];
+	
+	if (i > 0) { // can sum above me
+		rV += myBeforeBoard[board[i-1][j]];
+		if (j > 0 ) // can sum upper left corner
+			rV += myBeforeBoard[board[i-1][j-1]];
+		if (j < board[i].length-1) // can sum upper right corner
+			rV += myBeforeBoard[board[i-1][j+1]];
+	}
+	if (i < board.length-1) {// can sum below me
+		rV += myBeforeBoard[board[i+1][j]];
+		if (j > 0 ) // can sum upper left corner
+			rV += myBeforeBoard[board[i+1][j-1]];
+		if (j < board[i].length-1) // can sum upper right corner
+			rV += myBeforeBoard[board[i+1][j+1]];
+	}
+	
+	return rV;
+}
+
 	
 }
