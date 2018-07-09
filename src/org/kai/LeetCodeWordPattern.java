@@ -17,7 +17,7 @@ public class LeetCodeWordPattern {
 static LeetCodeWordPattern me = new LeetCodeWordPattern();
 
 public static void main(String[] args) {
-	// https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
+	// https://leetcode.com/problems/word-pattern/description/
 
 	long startTime = System.currentTimeMillis();
 	
