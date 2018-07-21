@@ -12,10 +12,11 @@ import java.util.Scanner;
 
 public class LeetCodeGameOfLife {
 
-static LeetCodeGameOfLife me = new LeetCodeGameOfLife();
+
 
 public static void main(String[] args) {
 	// https://leetcode.com/problems/game-of-life/description/
+	LeetCodeGameOfLife me = new LeetCodeGameOfLife();
 	int[][] testcase1 =   {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
 	int[][] testcase2 =   {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
 	//10,01,00,11
@@ -23,19 +24,19 @@ public static void main(String[] args) {
 	long startTime = System.currentTimeMillis();
 	
 	//   [0,0,0],  [1,0,1],  [0,1,1],  [0,1,0]
-	gameOfLife(testcase1);
+	me.gameOfLife(testcase1);
 	for (int[] thisRow: testcase1)
 		System.out.println(Arrays.toString(thisRow));
 	
 	System.out.println();
-	gameOfLife2(testcase2);
+	me.gameOfLife2(testcase2);
 	for (int[] thisRow: testcase2)
 		System.out.println(Arrays.toString(thisRow));
 	
 	System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
 }
 
-static public void gameOfLife(int[][] board) {  
+public void gameOfLife(int[][] board) {  
 	int [][] newBoard = new int[board.length][board[0].length];
 	
 	for (int i = 0; i< board.length; i++ ) {  // setup New board
@@ -62,7 +63,7 @@ static public void gameOfLife(int[][] board) {
 	}
 }
 
-static public int sumNeighbors (int[][] board, int i, int j) {
+public int sumNeighbors (int[][] board, int i, int j) {
 	int rV = 0;
 	
 	if (j > 0 ) // can sum left of me
@@ -91,7 +92,7 @@ static public int sumNeighbors (int[][] board, int i, int j) {
 static int[] myBeforeBoard = new int[50];
 static int[] myAfterBoard = new int[50];
 
-static public void gameOfLife2(int[][] board) {  // in-place implementation
+public void gameOfLife2(int[][] board) {  // in-place implementation
 	myBeforeBoard[1]=1;
 	myBeforeBoard[10]=1;
 	myBeforeBoard[11]=1;
@@ -123,7 +124,7 @@ static public void gameOfLife2(int[][] board) {  // in-place implementation
 	}
 }
 
-static public int sumNeighbors2 (int[][] board, int i, int j) { // in-place implementation
+public int sumNeighbors2 (int[][] board, int i, int j) { // in-place implementation
 	int rV = 0;
 
 	

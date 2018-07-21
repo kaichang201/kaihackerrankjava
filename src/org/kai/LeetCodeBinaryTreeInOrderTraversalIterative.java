@@ -11,6 +11,7 @@ import org.kai.LeetCodeBinaryTreeInOrderTraversalIterative.TreeNode;
 
 
 public class LeetCodeBinaryTreeInOrderTraversalIterative {
+	// https://leetcode.com/problems/binary-tree-inorder-traversal/description/
 
 	  class TreeNode {
 	      int val;
@@ -19,26 +20,27 @@ public class LeetCodeBinaryTreeInOrderTraversalIterative {
 	      TreeNode(int x) { val = x; }
 	  }
 
-	  static LeetCodeBinaryTreeInOrderTraversalIterative me = new LeetCodeBinaryTreeInOrderTraversalIterative();
 public static void main(String[] args) {
-	long startTime = System.currentTimeMillis();
-	
-	System.out.println(inorderTraversal(testCase1()));
+	LeetCodeBinaryTreeInOrderTraversalIterative me = new LeetCodeBinaryTreeInOrderTraversalIterative();
 
-	
-	System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
+    long startTime = System.currentTimeMillis();
+  
+    System.out.println(me.inorderTraversal(me.testCase1())); //Output: [1,3,2]
+
+  
+    System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
 }
 
-static public TreeNode testCase1 () {
-	TreeNode one = me.new TreeNode(1);
-	TreeNode two = me.new TreeNode(2);
-	TreeNode three = me.new TreeNode(3);
+ public TreeNode testCase1 () {  // Input: [1,null,2,3]  Output: [1,3,2]
+	TreeNode one = new TreeNode(1);
+	TreeNode two = new TreeNode(2);
+	TreeNode three = new TreeNode(3);
 	one.right = two;
 	two.left = three;
 	return one;
 }
 
-static public List<Integer> inorderTraversal(TreeNode root) {
+ public List<Integer> inorderTraversal(TreeNode root) {
 	List<Integer> returnValue = new ArrayList<>();
 	Deque<TreeNode> q = new ArrayDeque<>();
 	TreeNode current=root;

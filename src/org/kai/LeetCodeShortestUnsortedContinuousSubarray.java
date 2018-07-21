@@ -3,7 +3,7 @@ package org.kai;
 import java.util.Arrays;
 
 public class LeetCodeShortestUnsortedContinuousSubarray {
-	//https://stackoverflow.com/questions/1938101/how-to-initialize-an-array-in-java
+	//https://leetcode.com/problems/shortest-unsorted-continuous-subarray/description/
 
 	  class TreeNode {
 		      int val;
@@ -40,7 +40,7 @@ public class LeetCodeShortestUnsortedContinuousSubarray {
         		break;
         }
 
-        System.out.println ("left " + left + "right "+ right);
+        System.out.println ("left " + left + " right "+ right);
         
         return right-left+1;
     }
