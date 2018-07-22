@@ -18,7 +18,7 @@ public class LeetCodeThreeSum {
 
 
 public static void main(String[] args) {
-	// https://leetcode.com/problems/game-of-life/description/
+	// https://leetcode.com/problems/3sum/description/
 	LeetCodeThreeSum me = new LeetCodeThreeSum();
 	int[] testcase1 =   {-1, 0, 1, 2, -1, -4};
 	int[] testcase2 = {0,0,0};
