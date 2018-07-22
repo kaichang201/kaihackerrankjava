@@ -7,9 +7,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Scanner;
 
-import org.kai.LeetCodeMergeTwoSortedLists.TreeNode;
-
-
 public class LeetCodeMergeTwoSortedLists {
 	// https://leetcode.com/problems/merge-two-sorted-lists/description/
 
