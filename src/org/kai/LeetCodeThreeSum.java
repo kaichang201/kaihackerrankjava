@@ -184,7 +184,7 @@ public static void main(String[] args) {
 		return rv;
 	}
 	
-	public List<List<Integer>> threeSum4(int[] nums) {  //  n^2 + Big(1). hashset constant time by looking backwards
+	public List<List<Integer>> threeSum4(int[] nums) {  //  n^2 + Big(1). sort array and use hashsets for speed
 		Set<List<Integer>> rv = new HashSet<>();
 		Set<Integer> found = new HashSet<>();
 		if (nums.length < 3)
