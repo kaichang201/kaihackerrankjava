@@ -16,7 +16,7 @@ public class LeetCodeWordBreak2 {
 static LeetCodeWordBreak2 me = new LeetCodeWordBreak2();
 
 public static void main(String[] args) {
-	// https://leetcode.com/problems/game-of-life/description/
+	// https://leetcode.com/problems/word-break-ii/description/
 	List<String> testDict1 = new ArrayList<>();
 	testDict1.add("cat");
 	testDict1.add("cats");
