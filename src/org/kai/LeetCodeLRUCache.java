@@ -20,7 +20,7 @@ public class LeetCodeLRUCache {
 
 
 public static void main(String[] args) {
-	// https://leetcode.com/problems/product-of-array-except-self/description/
+	// https://leetcode.com/problems/lru-cache/description/
 	LeetCodeLRUCache me = new LeetCodeLRUCache();
 	
 	int[][] testcase1 = {{1,1},{2,2},{1},{3,3},{2},{4,4},{1},{3},{4}};
