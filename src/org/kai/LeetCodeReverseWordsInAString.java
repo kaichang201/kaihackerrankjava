@@ -34,20 +34,25 @@ static LeetCodeReverseWordsInAString me = new LeetCodeReverseWordsInAString();
 //		System.out.println(me.reverseWords2(testcase2));  //  blue is sky the
 //		System.out.println(me.reverseWords2(testcase3));  //  blue is sky the
 		
-		System.out.println(me.reverseWords3(testcase1));  //  blue is sky the
-		System.out.println(me.reverseWords3(testcase2));  //  blue is sky the
-		System.out.println(me.reverseWords3(testcase3));  //  blue is sky the
-		System.out.println(me.reverseWords3(testcase4));  //  the
+//		System.out.println(me.reverseWords3(testcase1));  //  blue is sky the
+//		System.out.println(me.reverseWords3(testcase2));  //  blue is sky the
+//		System.out.println(me.reverseWords3(testcase3));  //  blue is sky the
+//		System.out.println(me.reverseWords3(testcase4));  //  the
 		
-		System.out.println(me.reverseWords4(testcase1));  //  blue is sky the
-		System.out.println(me.reverseWords4(testcase2));  //  blue is sky the
-		System.out.println(me.reverseWords4(testcase3));  //  blue is sky the
-		System.out.println(me.reverseWords4(testcase4));  //  the
+//		System.out.println(me.reverseWords4(testcase1));  //  blue is sky the
+//		System.out.println(me.reverseWords4(testcase2));  //  blue is sky the
+//		System.out.println(me.reverseWords4(testcase3));  //  blue is sky the
+//		System.out.println(me.reverseWords4(testcase4));  //  the
 		
-		System.out.println(me.reverseWords5(testcase1));  //  blue is sky the
-		System.out.println(me.reverseWords5(testcase2));  //  blue is sky the
-		System.out.println(me.reverseWords5(testcase3));  //  blue is sky the
-		System.out.println(me.reverseWords5(testcase4));  //  the
+//		System.out.println(me.reverseWords5(testcase1));  //  blue is sky the
+//		System.out.println(me.reverseWords5(testcase2));  //  blue is sky the
+//		System.out.println(me.reverseWords5(testcase3));  //  blue is sky the
+//		System.out.println(me.reverseWords5(testcase4));  //  the
+		
+		System.out.println(me.reverseWords6(testcase1));  //  blue is sky the
+		System.out.println(me.reverseWords6(testcase2));  //  blue is sky the
+		System.out.println(me.reverseWords6(testcase3));  //  blue is sky the
+		System.out.println(me.reverseWords6(testcase4));  //  the
 		
 		System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
 	}
@@ -134,6 +139,23 @@ static LeetCodeReverseWordsInAString me = new LeetCodeReverseWordsInAString();
     		left = s2.lastIndexOf(" ", right-1);
     	}
     	rv.append (" " + s2.substring(0,right));
+    	return rv.toString().trim();
+	}	
+    
+    public String reverseWords6(String s) { // same as 5, but O(1) space.
+    	StringBuilder rv = new StringBuilder();
+
+    	int right = s.length();
+    	int left = s.lastIndexOf(" ", right-1);
+    	while (left > -1) {
+    		String word = s.substring(left, right);
+  //  		System.out.println("l "+ left + " r " + right);
+    		if (!" ".equals(word))
+    			rv.append(word);
+    		right = left;
+    		left = s.lastIndexOf(" ", right-1);
+    	}
+    	rv.append (" " + s.substring(0,right));
     	return rv.toString().trim();
 	}	
 }
