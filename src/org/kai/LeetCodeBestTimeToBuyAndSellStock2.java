@@ -40,7 +40,7 @@ public static void main(String[] args) {
 
 }
 
-	public int maxProfit(int[] prices) {
+	public int maxProfit(int[] prices) {  // 1ms, or 99.85%.
 		int rv=0;
 		boolean holding = false;
 
