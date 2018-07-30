@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 
 public class LeetCodeCountNumbersWithUniqueDigits {
+	
+	// https://leetcode.com/problems/count-numbers-with-unique-digits/discuss/153229/Java-Recursion-Solution
 
 	  class TreeNode {
 		      int val;
@@ -27,7 +29,8 @@ public class LeetCodeCountNumbersWithUniqueDigits {
 
 	
 
-	public int countNumbersWithUniqueDigits(int n) {
+	public int countNumbersWithUniqueDigits(int n) {  // I would need more work to understand this.
+		// really good explanation on https://leetcode.com/problems/count-numbers-with-unique-digits/discuss/83041/JAVA-DP-O(1)-solution.
 		if (n==0) {return 1;}
 		if (n==1) {return 10;}
 		int temp = 9;
