@@ -55,7 +55,31 @@ static LeetCodeCourseSchedule me = new LeetCodeCourseSchedule();
 		System.out.println(me.canFinish(test5, testcase5));  // true 0 -> 1, 0 -> 2, 1-> 2
 		System.out.println(me.canFinish(test6, testcase6));  // false 2-> 0, 1-> 0, 3-> 1, 3 -> 2, 1-> 3 
 		System.out.println(me.canFinish(test7, testcase7));  // true 1-> 0, 2-> 6, 1->7, 6-> 4, 7-> 0, 0-> 5 
-		System.out.println(me.canFinish(test8, testcase8));  // true 1-> 0, 2-> 6, 1->7, 6-> 4, 7-> 0, 0-> 5 
+		System.out.println(me.canFinish(test8, testcase8));  // true 
+
+		System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
+		
+		startTime = System.currentTimeMillis();
+		System.out.println(me.canFinish2(test1, testcase1));  // true  1 -> 0
+		System.out.println(me.canFinish2(test2, testcase2));  // false 1 -> 0, 0 -> 1, circular
+		System.out.println(me.canFinish2(test3, testcase3));  // true  1-> 0, 2-> 1
+		System.out.println(me.canFinish2(test4, testcase4));  // false 1 -> 0, 0 -> 2, 2-> 1, circular
+		System.out.println(me.canFinish2(test5, testcase5));  // true 0 -> 1, 0 -> 2, 1-> 2
+		System.out.println(me.canFinish2(test6, testcase6));  // false 2-> 0, 1-> 0, 3-> 1, 3 -> 2, 1-> 3 
+		System.out.println(me.canFinish2(test7, testcase7));  // true 1-> 0, 2-> 6, 1->7, 6-> 4, 7-> 0, 0-> 5 
+		System.out.println(me.canFinish2(test8, testcase8));  // true 
+
+		System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
+		
+		startTime = System.currentTimeMillis();
+		System.out.println(me.canFinish3(test1, testcase1));  // true  1 -> 0
+		System.out.println(me.canFinish3(test2, testcase2));  // false 1 -> 0, 0 -> 1, circular
+		System.out.println(me.canFinish3(test3, testcase3));  // true  1-> 0, 2-> 1
+		System.out.println(me.canFinish3(test4, testcase4));  // false 1 -> 0, 0 -> 2, 2-> 1, circular
+		System.out.println(me.canFinish3(test5, testcase5));  // true 0 -> 1, 0 -> 2, 1-> 2
+		System.out.println(me.canFinish3(test6, testcase6));  // false 2-> 0, 1-> 0, 3-> 1, 3 -> 2, 1-> 3 
+		System.out.println(me.canFinish3(test7, testcase7));  // true 1-> 0, 2-> 6, 1->7, 6-> 4, 7-> 0, 0-> 5 
+		System.out.println(me.canFinish3(test8, testcase8));  // true 
 
 		System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
 	}
@@ -100,7 +124,7 @@ static LeetCodeCourseSchedule me = new LeetCodeCourseSchedule();
 				if (taken.size() == numCourses) // adding this went from 880ms to 553 ms.
 					return true;
 				if (loopCounter == 0) {
-					System.out.println("Loop detected  " + loopCounter + " q " + q.toString() );
+					//System.out.println("Loop detected  " + loopCounter + " q " + q.toString() );
 					rv=false;
 					break;
 				}
@@ -109,8 +133,75 @@ static LeetCodeCourseSchedule me = new LeetCodeCourseSchedule();
 		}
 		return rv;
 	}
+	
+	public boolean canFinish2(int numCourses, int[][] p) {  // 549 ms
+		boolean rv = true;
+		Map<Integer, Set<Integer>> depends = new HashMap<>();
+		
+		for (int i = 0; i<numCourses; i++)  // initialize the Sets
+			depends.put(i, new HashSet<Integer>());
+		
+		for (int i = 0; i<p.length; i++)  // 0 requires 1
+			depends.get(p[i][0]).add(p[i][1]);
+		for (int i = 0; i < numCourses; i++) {
+			rv = dfs(depends, i, new HashSet<Integer>());
+			if (!rv)
+				return rv;
+		}
+		return rv;
+	}
 
+	public boolean dfs (Map<Integer, Set<Integer>> depends, int node, Set<Integer> prior) {
+		boolean rv = true;
+		if (prior.contains(node))  // My prior includes me. Loop detected
+			return false;
+		for (Integer n2 : depends.get(node)) {
+			prior.add(node);
+			rv = dfs(depends, n2, prior);
+			if (rv == false)
+				return false;  // passing the false up the line
+			prior.remove(node);
+		}
+		return rv;
+	}
+	
+	public boolean canFinish3(int numCourses, int[][] p) {  // adding memoization. 55.32% 15ms.
+		boolean rv = true;
+		Map<Integer, Set<Integer>> depends = new HashMap<>();
+		
+		for (int i = 0; i<numCourses; i++)  // initialize the Sets
+			depends.put(i, new HashSet<Integer>());
+		
+		for (int i = 0; i<p.length; i++)  // 0 requires 1
+			depends.get(p[i][0]).add(p[i][1]);
+		
+		Map<Integer, Boolean> memo = new HashMap<>();
+		for (int i = 0; i < numCourses; i++) {
+			rv = dfs3(depends, i, new HashSet<Integer>(), memo, numCourses);
+			if (!rv)
+				return rv;
+			if (memo.size() == numCourses)
+				return true;
+		}
+		return rv;
+	}
 
+	public boolean dfs3(Map<Integer, Set<Integer>> depends, int node, Set<Integer> prior, Map<Integer, Boolean> memo, int numCourses) {
+		boolean rv = true;
+		if (memo.containsKey(node)  || memo.size() == numCourses)
+			return true;
+		if (prior.contains(node))  // My prior includes me. Loop detected
+			return false;
+		for (Integer n2 : depends.get(node)) {
+			prior.add(node);
+			rv = dfs3(depends, n2, prior, memo, numCourses);
+			if (rv == false)
+				return false;  // passing the false up the line
+			prior.remove(node);
+		}
+		memo.put(node, true);
 
+		return rv;
+	}
 	
 }
