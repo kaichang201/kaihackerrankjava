@@ -86,7 +86,7 @@ public class LeetCodeLetterCasePermuation {
 		return new ArrayList<String>(s);
 	}
 	
-	public List<String> letterCasePermutation2(String S) {  // 69.96%
+	public List<String> letterCasePermutation2(String S) {  // 69.96% 8ms
 		Set<String> s = new HashSet<>();
 		
 		dfs(S.toCharArray(), 0, s);
