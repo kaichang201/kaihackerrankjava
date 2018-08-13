@@ -1,11 +1,7 @@
 package org.kai;
 
 import java.security.MessageDigest;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import org.kai.LeetCodeTreeTravelsKai.TreeNode;
 
@@ -56,9 +52,16 @@ public static void main(String[] args) {
 	TreeNode treeKai = me.buildBTree(testTreeKai, 1);
 	System.out.println(me.bfs(treeKai));
 	System.out.println(me.dfs(treeKai));
+	
+	startTime = System.currentTimeMillis();
 	List<String> l = new ArrayList<>();
 	me.dfsInOrder(treeKai, l);
 	System.out.println(l);
+    System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
+
+	startTime = System.currentTimeMillis();
+
+	System.out.println(me.dfsInOrderIterative(treeKai));
 	
     System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
     
@@ -124,7 +127,29 @@ public void dfsInOrder(TreeNode n, List<String> l) {  // Depth First Search, Top
 	dfsInOrder(n.left, l);
 	l.add(String.valueOf(n.val));
 	dfsInOrder(n.right, l);
+}
+
+public String dfsInOrderIterative(TreeNode n) {  // Depth First Search, Top -> Down, Left -> Right.  doing se.contains is constant but slower
+	List<String> a = new ArrayList<>();
+	Deque<TreeNode> st = new ArrayDeque<>();
+	Set<Integer> se = new HashSet<>();
 	
+	st.add(n);
+	while (!st.isEmpty()) {
+		TreeNode t = st.removeLast();  // add to end, remove from end.  So effectively a stack
+		
+		if (t.left != null && !se.contains(t.left.val)) {  // if node has left that has not been processed.  Push back into stack
+			if (t.right != null)
+				st.add(t.right);
+			st.add(t);
+			st.addLast(t.left);		
+		} else { // either left is null, or left has been processed;
+			se.add(t.val);
+			a.add(String.valueOf(t.val));
+		}
+	}
+	return a.toString();
+
 }
 
 public TreeNode buildBTree (Integer[] inArray, int root) {  // given an arraylist, build a binarytree
