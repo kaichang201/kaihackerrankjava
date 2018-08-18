@@ -22,19 +22,20 @@ import java.util.stream.IntStream;
 public class HackerRankGameOfThrones2 {
 
 
+Map<Integer, BigInteger> fac = new HashMap<>();
 
 public static void main(String[] args) {
 	// https://www.hackerrank.com/challenges/game-of-throne-ii/forum
 	HackerRankGameOfThrones2 me = new HackerRankGameOfThrones2();
 	
-	String testcase1 = "aaabbbb";  // 3
-	String testcase2 = "cdcdcdcdeeeef"; // 90
+	String testcase1 = "aaabbbb";  // 3! / 2! 3
+	String testcase2 = "cdcdcdcdeeeef"; // 90  
 	String testcase3 = "cdefghmnopqrstuvw"; // 0
 	String testcase4 = "c"; // 0
 	String testcase5 = "aabbcc"; // 6
 	String testcase6 = "" ; // 565288459
 
-	
+
 	long startTime = System.currentTimeMillis();
 
 	System.out.println(me.solve(testcase1)); // 3
@@ -54,27 +55,23 @@ public static void main(String[] args) {
 	} catch (Exception e) {
 		System.out.println("Exception " + e);
 	}
+
 	System.out.println("size of string " + testcase6.length());
 	System.out.println(me.solve(testcase6)); // 	 565288459
 
-	System.out.println("kai  " + me.factorial(1000)); // 	 
 	
 	System.out.println("Time taken " + (System.currentTimeMillis() - startTime));
 	
-w
 }
 
 	public int solve(String s) {
 		Map<Character, Integer> m = new HashMap<>();
-		Map<Character, BigInteger> m2 = new HashMap<>();
+		fac.put(0, BigInteger.ONE);
+		fac.put(1, BigInteger.ONE);
 		
 		int oddCount = 0;
-		BigInteger totalFac;
-		
-		if ((s.length() & 1) == 1)
-			totalFac = factorial((s.length()-1)/2);
-		else
-			totalFac = factorial(s.length()/2);
+		int numerator = (s.length() & 1) == 1 ? (s.length()-1)/2 : s.length()/2;
+		BigInteger denominator = BigInteger.ONE;
 
 		for (Character c : s.toCharArray()) {  // count characters
 			if (m.containsKey(c))
@@ -83,34 +80,37 @@ w
 				m.put(c, 1);
 		}
 		
+		for (int i=2; i<= numerator; i++)   // prime the cache
+			fac.put(i, fac.get(i-1).multiply(BigInteger.valueOf(i)));
+
+		BigInteger totalFac = fac.get(numerator);
+		
 		for (Character c : m.keySet()) {
 			Integer i = m.get(c);
+			//System.out.println("c " + c + " i "+ i);
 			if ((i & 1) == 1) {
 				oddCount++;
 				if (oddCount > 1)
 					return 0;  // game over.  palindrome can have 0 or 1 odd characters
-				totalFac = totalFac.divide(factorial((i-1)/2));
+				denominator = denominator.multiply(fac.get((i-1)/2));
 			} else {
-				totalFac = totalFac.divide(factorial(i/2));
+				denominator = denominator.multiply(fac.get(i/2));
 			}
 		}
-		
 
-		
-	//	System.out.println("totalFac " + totalFac);
-			
-		return totalFac.intValue();
+		return totalFac.divide(denominator).intValue();
 
 	}
 	
-	public BigInteger factorial (Integer n) {
-		System.out.println(" n " + n);
-		BigInteger result = BigInteger.ONE;
-	    for (int i = 1; i <= n; i++)
-	    	result = result.multiply(BigInteger.valueOf(i));
-		System.out.println(" fact " + result);
-	    return result;
-	}
-	
+	public BigInteger factorial (Integer num) {
+		BigInteger rv;
+        if (fac.containsKey(num))
+            rv = fac.get(num);
+        else {
+        	rv = factorial(num-1).multiply(BigInteger.valueOf(num));
+        	fac.put(num, rv);
+        }
+        return rv;
+    }
 	
 }
