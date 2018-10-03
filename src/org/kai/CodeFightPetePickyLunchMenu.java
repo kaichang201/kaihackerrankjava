@@ -128,7 +128,8 @@ public class CodeFightPetePickyLunchMenu {
 		Set<String> mealplan;
 		
 		public MealPlan () {
-			mealplan = new TreeSet<>();
+			// using TreeSet so same meals taken in different sequence are sorted for the hashCode
+			mealplan = new TreeSet<>();  
 		}
 		
 		@Override
@@ -140,8 +141,14 @@ public class CodeFightPetePickyLunchMenu {
 		}
 		// implement equals and hashCode so Set will automatically eliminate dups
 		@Override
-		public boolean equals (Object mp) {
-			return mp.hashCode() == this.hashCode();
+		public boolean equals (Object obj) {  // the two are equal if all the meals are equal.
+			MealPlan mp = (MealPlan) obj;
+			if (mp.beanCount != this.beanCount  || mp.mealplan.size() != this.mealplan.size())
+				return false;
+			for (String meal: this.mealplan)  //look for each meal
+				if (!mp.mealplan.contains(meal)) // if a meal does not exist
+					return false; // then the meals aren't equal
+			return true;
 		}
 		
 		@Override
