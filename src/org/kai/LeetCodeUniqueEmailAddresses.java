@@ -41,7 +41,7 @@ public static void main(String[] args) {
 
 }
 
-	public int numUniqueEmails(String[] emails) {
+	public int numUniqueEmails(String[] emails) { // 17ms, 90.46% faster.  28.5MB, less than 40%.
 		Set<String> s = new HashSet<>();  // Using a Set to take advantage it can't have dups.
 		// nested loop approach.  n emails, m characters each.  O(n*m)
 		for (String email: emails) {  // outer loop through n email
