@@ -1,13 +1,7 @@
 package org.kai;
 
-import java.security.MessageDigest;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 
 
 public class LeetCodeCountingBits {
