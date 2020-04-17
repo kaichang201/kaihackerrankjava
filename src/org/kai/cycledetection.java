@@ -3,6 +3,7 @@ package org.kai;
 import java.util.Scanner;
 
 public class cycledetection {
+	/*
 
 	boolean hasCycle(Node head) {
 	    Node ptr1 = head, ptr2 = head;
@@ -13,5 +14,5 @@ public class cycledetection {
 	        if (ptr1 == ptr2) return true;
 	    }
 	}
-
+*./
 }

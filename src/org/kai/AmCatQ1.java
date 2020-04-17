@@ -23,6 +23,8 @@ public class AmCatQ1 {
 
 
 public static void main(String[] args) {
+    System.out.println("Hello World");
+}
 /*
  * Test ID 23280666774313
  * Test ID 23280666774313
@@ -37,7 +39,7 @@ public static void main(String[] args) {
  * 22 out of 22 passed.
  */
 
-
+/*
 	AmCatQ1 me = new AmCatQ1();
 	
 	int[] testcase1 = {{1,2},{3,4}{1,-1}};
@@ -62,7 +64,7 @@ public static void main(String[] args) {
 		 * always calculated from [0,0]. Let's try this way.
 		 * loop across allLocations.  put into a priorityqueue that has custom comparator to calculate distance from 0,0
 		 * then pull numDeliveries from pq
-		 */
+
 		List<List<Integer>> rv = new ArrayList<>();
 		Comparator<List<Integer>> myComparator = new Comparator<List<Integer>>() {
 			@Override
@@ -89,6 +91,6 @@ public static void main(String[] args) {
 		return rv;
 	}
 	
-
+*/
 
 }
